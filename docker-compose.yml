@@ -1,0 +1,45 @@
+version: '3'
+
+services: 
+  db:
+    image: mysql:latest
+    container_name: innoscripta-db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    networks:
+      - innoscripta
+
+  app:
+    depends_on:
+      - db
+    build: .
+    container_name: 'innoscripta-app'
+    ports:
+      - 8000:80
+    volumes:
+        - "./:/app/"
+        - "app_cache:/app/bootstrap/cache/"
+        - "app_vendor:/app/vendor/"
+    restart: unless-stopped
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=innoscripta
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    networks:
+      - innoscripta
+      
+networks:
+  innoscripta: 
+    driver: bridge
+
+volumes:
+  app_cache: {}
+  app_vendor: {}
+  mysql_volume: {}
