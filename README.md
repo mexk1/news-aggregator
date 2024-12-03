@@ -65,7 +65,7 @@ To get started with the project, follow these steps:
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/news-aggregator-poc.git
+    git clone https://github.com/mexk1/news-aggregator.git
     ```
 
 2. Install dependencies:
