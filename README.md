@@ -71,7 +71,6 @@ To get started with the project, follow these steps:
 2. Install dependencies:
     ```sh
     composer install
-    npm install
     ```
 
 3. Set up the environment variables:
