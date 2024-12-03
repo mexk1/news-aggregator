@@ -3,7 +3,7 @@ Still building the workspace index, response may be less accurate.
 # News Aggregator PoC
 
 This project is a Proof of Concept (PoC) for a news aggregator application. It demonstrates how to pull news from various sources, categorize them, and store them in a database. The project uses the NewsApi as an example source for fetching news articles.
-This App is part of a test case for a job application.
+This App is part of a test case for a job application. Remember it's a PoC, not a full implementation.
 
 ## Features
 
