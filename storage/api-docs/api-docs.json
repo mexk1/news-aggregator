@@ -1,0 +1,243 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "NewsAggregator PoC",
+        "version": "1"
+    },
+    "paths": {
+        "/api/news/search": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "Search news",
+                "operationId": "d3010dd1d82dc132b93368c9bd51d8d1",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "categories",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "authors",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/News"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/news/{id}": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "Get news details",
+                "description": "Fetch the details of a news item by its ID.",
+                "operationId": "getNewsDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the news item",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/News"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "News item not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "News": {
+                "title": "News",
+                "description": "News model",
+                "required": [
+                    "external_id",
+                    "publish_date",
+                    "title",
+                    "content",
+                    "source_id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "ID of the news",
+                        "type": "integer"
+                    },
+                    "external_id": {
+                        "description": "External ID of the news",
+                        "type": "string"
+                    },
+                    "publish_date": {
+                        "description": "Publish date of the news",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "title": {
+                        "description": "Title of the news",
+                        "type": "string"
+                    },
+                    "content": {
+                        "description": "Content of the news",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the news",
+                        "type": "string"
+                    },
+                    "original_url": {
+                        "description": "Original URL of the news",
+                        "type": "string"
+                    },
+                    "original_image_url": {
+                        "description": "Original image URL of the news",
+                        "type": "string"
+                    },
+                    "author": {
+                        "description": "Author of the news",
+                        "type": "string"
+                    },
+                    "source_id": {
+                        "description": "Source ID of the news",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "NewsCategory": {
+                "title": "NewsCategory",
+                "description": "This class represents a news category model and implements the NewsCategoryContract interface.",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier for the news category.",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the news category.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "NewsSource": {
+                "title": "NewsSource",
+                "description": "NewsSource model",
+                "required": [
+                    "external_id",
+                    "name",
+                    "is_enabled"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the news source",
+                        "type": "integer"
+                    },
+                    "external_id": {
+                        "description": "The external identifier of the news source",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The name of the news source",
+                        "type": "string"
+                    },
+                    "is_enabled": {
+                        "description": "Indicates if the news source is enabled",
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "News",
+            "description": "News"
+        }
+    ]
+}

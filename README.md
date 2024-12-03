@@ -1,66 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Still building the workspace index, response may be less accurate.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# News Aggregator PoC
 
-## About Laravel
+This project is a Proof of Concept (PoC) for a news aggregator application. It demonstrates how to pull news from various sources, categorize them, and store them in a database. The project uses the NewsApi as an example source for fetching news articles.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Pull news from multiple sources
+- Categorize news articles
+- Store news articles in a database
+- Schedule daily news pulling at 00:00
+- Command-line interface for pulling news on demand
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Daily Schedule
 
-## Learning Laravel
+The application is configured to run a daily schedule that pulls news from all configured sources at 00:00. This is achieved using Laravel's scheduling feature. The schedule is defined in the 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+AppServiceProvider
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+ class:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```php
+use Illuminate\Support\Facades\Schedule;
 
-## Laravel Sponsors
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        Schedule::command(PullNews::class)->dailyAt('00:00');
+    }
+}
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## PullNews Command
 
-### Premium Partners
+The `PullNews` command allows you to pull news from specified sources, categories, and authors within a given date range. It supports pagination and allows limiting the number of news items pulled. The command can be executed from the command line using the following syntax:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```sh
+php artisan app:pull-news --sources=source1,source2 --categories=category1,category2 --authors=author1,author2 --from=2023-01-01 --to=2023-12-31 --query=example --page=1 --per-page=100 --max-count=500
+```
 
-## Contributing
+### Command Options
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- `--sources`: The sources to pull the news from (comma-separated).
+- `--categories`: The categories to pull the news from (comma-separated).
+- `--authors`: The authors to pull the news from (comma-separated).
+- `--from`: The date to pull the news from (YYYY-MM-DD format).
+- `--to`: The date to pull the news to (YYYY-MM-DD format).
+- `--query`: The query to search for.
+- `--page`: The page number (default: 1).
+- `--per-page`: The number of news per page (default: 100).
+- `--max-count`: The maximum number of news to pull.
 
-## Code of Conduct
+### Example Usage
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```sh
+php artisan app:pull-news --sources=news_api --categories=technology,science --authors=john_doe --from=2023-01-01 --to=2023-12-31 --query=latest --page=1 --per-page=50 --max-count=200
+```
 
-## Security Vulnerabilities
+## Getting Started
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+To get started with the project, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/your-username/news-aggregator-poc.git
+    ```
+
+2. Install dependencies:
+    ```sh
+    composer install
+    npm install
+    ```
+
+3. Set up the environment variables:
+    ```sh
+    cp .env.example .env
+    ```
+
+4. Run the migrations:
+    ```sh
+    php artisan migrate
+    ```
+
+5. Run the application:
+    ```sh
+    php artisan serve
+    ```
+
+## Getting Started with Docker
+
+1. Build and start the containers:
+    ```sh
+    docker-compose up --build -d
+    ```
+
+2. Access the application:
+    Open your browser and navigate to `http://localhost:8000`.
+
+3. Run migrations inside the Docker container:
+    ```sh
+    docker-compose exec app php artisan migrate
+    ```
+
+4. (Optional) To run the `PullNews` command inside the Docker container:
+    ```sh
+    docker-compose exec app php artisan app:pull-news --sources=source1,source2 --categories=category1,category2 --authors=author1,author2 --from=2023-01-01 --to=2023-12-31 --query=example --page=1 --per-page=100 --max-count=500
+    ```
+
+## Running Tests
+
+To run the tests, use the following command:
+
+```sh
+composer test
+```
+
+or 
+    
+```sh
+docker-compose exec app "composer" "test"
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License. See the LICENSE file for details.
